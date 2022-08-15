@@ -1,0 +1,4 @@
+name: tChat
+version: '${version}'
+main: br.com.thiago.tchat.TChat
+description: Simple chat plugin created for DevNics
