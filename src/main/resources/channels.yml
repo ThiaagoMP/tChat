@@ -1,0 +1,8 @@
+GLOBAL:
+  activated: true
+LOCAL:
+  activated: true
+SHOUT:
+  activated: true
+WHISPER:
+  activated: true

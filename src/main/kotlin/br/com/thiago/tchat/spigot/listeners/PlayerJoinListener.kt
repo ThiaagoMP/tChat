@@ -1,4 +1,4 @@
-package br.com.thiago.tchat.listeners
+package br.com.thiago.tchat.spigot.listeners
 
 import br.com.thiago.tchat.data.channels.ChannelType
 import br.com.thiago.tchat.data.players.configuration.IChannelSystemPlayerConfiguration

@@ -1,0 +1,6 @@
+ForbiddenWords:
+  - 'fuck'
+Local:
+  DistanceInBlocks: 20
+Whisper:
+  DistanceInBlocks: 3

@@ -1,12 +1,12 @@
-package br.com.thiago.tchat.listeners
+package br.com.thiago.tchat.spigot.listeners
 
-import br.com.thiago.tchat.commands.GlobalCommand
-import br.com.thiago.tchat.commands.LocalCommand
-import br.com.thiago.tchat.commands.ShoutCommand
-import br.com.thiago.tchat.commands.WhisperCommand
 import br.com.thiago.tchat.data.channels.ChannelType
-import br.com.thiago.tchat.data.channels.controller.ChannelController
+import br.com.thiago.tchat.data.channels.system.controller.ChannelController
 import br.com.thiago.tchat.data.players.controller.ChatPlayerController
+import br.com.thiago.tchat.spigot.commands.chats.GlobalCommand
+import br.com.thiago.tchat.spigot.commands.chats.LocalCommand
+import br.com.thiago.tchat.spigot.commands.chats.ShoutCommand
+import br.com.thiago.tchat.spigot.commands.chats.WhisperCommand
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

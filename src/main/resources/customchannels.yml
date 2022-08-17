@@ -1,0 +1,5 @@
+channelcustom:
+  name: channelcustom
+  activated: true
+  isPublic: true
+  players: [ ]

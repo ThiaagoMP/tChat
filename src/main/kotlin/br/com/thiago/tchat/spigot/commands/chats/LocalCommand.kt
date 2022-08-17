@@ -1,7 +1,7 @@
-package br.com.thiago.tchat.commands
+package br.com.thiago.tchat.spigot.commands.chats
 
 import br.com.thiago.tchat.data.channels.ChannelType
-import br.com.thiago.tchat.data.channels.controller.ChannelController
+import br.com.thiago.tchat.data.channels.system.controller.ChannelController
 import br.com.thiago.tchat.data.players.controller.ChatPlayerController
 import br.com.thiago.tchat.data.players.entity.ChatPlayer
 import me.saiintbrisson.minecraft.command.annotation.Command

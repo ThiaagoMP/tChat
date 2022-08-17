@@ -1,21 +1,17 @@
 package br.com.thiago.tchat
 
-import br.com.thiago.tchat.commands.GlobalCommand
-import br.com.thiago.tchat.commands.LocalCommand
-import br.com.thiago.tchat.commands.ShoutCommand
-import br.com.thiago.tchat.commands.WhisperCommand
 import br.com.thiago.tchat.configurations.ConfigController
 import br.com.thiago.tchat.configurations.impl.ChannelsConfig
-import br.com.thiago.tchat.dao.channel.ChannelDao
+import br.com.thiago.tchat.configurations.impl.CustomChannelsConfig
+import br.com.thiago.tchat.dao.channel.custom.ChannelCustomDao
+import br.com.thiago.tchat.dao.channel.system.ChannelDao
 import br.com.thiago.tchat.data.channels.ChannelType
-import br.com.thiago.tchat.data.channels.controller.ChannelController
+import br.com.thiago.tchat.data.channels.custom.controller.CustomChannelController
+import br.com.thiago.tchat.data.channels.system.controller.ChannelController
 import br.com.thiago.tchat.data.players.configuration.IChannelSystemPlayerConfiguration
 import br.com.thiago.tchat.data.players.configuration.impl.ChannelSystemPlayerConfiguration
 import br.com.thiago.tchat.data.players.controller.ChatPlayerController
 import br.com.thiago.tchat.data.players.entity.ChatPlayer
-import br.com.thiago.tchat.listeners.PlayerChatListener
-import br.com.thiago.tchat.listeners.PlayerJoinListener
-import me.saiintbrisson.bukkit.command.BukkitFrame
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -28,14 +24,24 @@ class TChat : JavaPlugin() {
 
     var chatPlayerController: ChatPlayerController = ChatPlayerController()
     var configController: ConfigController = ConfigController()
+    var customChannelController: CustomChannelController? = null
     var channelController: ChannelController? = null
-
+    val channelCustomDao = ChannelCustomDao()
 
     override fun onEnable() {
+
         instance = this
         configController.load(this)
+        val customChannelsConfig = configController.configs[CustomChannelsConfig::class.java]!!
+
         channelController =
             ChannelController(ChannelDao().load(configController.configs[ChannelsConfig::class.java]!!.getConfig()!!))
+        customChannelController =
+            CustomChannelController(
+                channelCustomDao.load(customChannelsConfig.getConfig()!!),
+                channelCustomDao,
+                customChannelsConfig
+            )
 
         registerCommands()
         registerListeners()
@@ -54,18 +60,10 @@ class TChat : JavaPlugin() {
     }
 
     private fun registerListeners() {
-        Bukkit.getPluginManager()
-            .registerEvents(PlayerChatListener(chatPlayerController, channelController!!, this.config), this)
-        Bukkit.getPluginManager().registerEvents(PlayerJoinListener(chatPlayerController), this)
+        SpigotLoader.registerListeners(this)
     }
 
     private fun registerCommands() {
-        val bukkitFrame = BukkitFrame(this)
-        bukkitFrame.registerCommands(
-            GlobalCommand(chatPlayerController, channelController!!),
-            LocalCommand(chatPlayerController, channelController!!, this.config),
-            ShoutCommand(chatPlayerController, channelController!!),
-            WhisperCommand(chatPlayerController, channelController!!, this.config)
-        )
+        SpigotLoader.registerCommands(this)
     }
 }
