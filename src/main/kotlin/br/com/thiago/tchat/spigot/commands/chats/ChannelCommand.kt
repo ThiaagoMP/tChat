@@ -1,4 +1,4 @@
-package br.com.thiago.tchat.spigot.commands.admin.custom.channels
+package br.com.thiago.tchat.spigot.commands.chats
 
 import br.com.thiago.tchat.data.channels.custom.controller.CustomChannelController
 import me.saiintbrisson.minecraft.command.annotation.Command
@@ -50,7 +50,7 @@ class ChannelCommand(private val customChannelController: CustomChannelControlle
 
         customChannel.players.forEach {
             if (it.isOnline)
-                it.sendMessage("§7[§a$name§7] >> $message")
+                (it as Player).sendMessage("§7[§a$name§7] >> $message")
         }
     }
 

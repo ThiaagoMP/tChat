@@ -5,13 +5,11 @@ import br.com.thiago.tchat.configurations.impl.ChannelsConfig
 import br.com.thiago.tchat.configurations.impl.CustomChannelsConfig
 import br.com.thiago.tchat.dao.channel.custom.ChannelCustomDao
 import br.com.thiago.tchat.dao.channel.system.ChannelDao
-import br.com.thiago.tchat.data.channels.ChannelType
+import br.com.thiago.tchat.dao.players.PlayersDao
+import br.com.thiago.tchat.dao.players.factory.ConnectionFactory
 import br.com.thiago.tchat.data.channels.custom.controller.CustomChannelController
 import br.com.thiago.tchat.data.channels.system.controller.ChannelController
-import br.com.thiago.tchat.data.players.configuration.IChannelSystemPlayerConfiguration
-import br.com.thiago.tchat.data.players.configuration.impl.ChannelSystemPlayerConfiguration
 import br.com.thiago.tchat.data.players.controller.ChatPlayerController
-import br.com.thiago.tchat.data.players.entity.ChatPlayer
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -27,35 +25,51 @@ class TChat : JavaPlugin() {
     var customChannelController: CustomChannelController? = null
     var channelController: ChannelController? = null
     val channelCustomDao = ChannelCustomDao()
+    var playersDao: PlayersDao? = null
 
     override fun onEnable() {
 
         instance = this
         configController.load(this)
+        loadSQL()
+
         val customChannelsConfig = configController.configs[CustomChannelsConfig::class.java]!!
 
         channelController =
             ChannelController(ChannelDao().load(configController.configs[ChannelsConfig::class.java]!!.getConfig()!!))
-        customChannelController =
-            CustomChannelController(
-                channelCustomDao.load(customChannelsConfig.getConfig()!!),
-                channelCustomDao,
-                customChannelsConfig
-            )
+        customChannelController = CustomChannelController(
+            channelCustomDao.load(customChannelsConfig.getConfig()!!), channelCustomDao, customChannelsConfig
+        )
 
+        playersDao!!.createTable()
         registerCommands()
         registerListeners()
         loadPlayersInReload()
     }
 
+    override fun onDisable() {
+        Bukkit.getOnlinePlayers().forEach {
+            playersDao?.updateAccount(chatPlayerController.players[it]!!) ?: return
+        }
+    }
+
+    private fun loadSQL() {
+        val section = this.config.getConfigurationSection("Database")
+        playersDao = PlayersDao(
+            ConnectionFactory.getConnection(
+                section.getString("password"),
+                section.getString("user"),
+                section.getString("host"),
+                section.getString("port"),
+                section.getString("database")
+            )!!
+        )
+    }
+
     private fun loadPlayersInReload() {
         Bukkit.getOnlinePlayers().forEach { player ->
-            val configurations = emptyMap<ChannelType, IChannelSystemPlayerConfiguration>().toMutableMap()
-            ChannelType.values().forEach {
-                configurations[it] = ChannelSystemPlayerConfiguration(true)
-                //pegar o chat ativo e as configurations do sql
-            }
-            chatPlayerController.players[player] = ChatPlayer(player, ChannelType.GLOBAL, configurations)
+            val chatPlayer = playersDao!!.findChatPlayer(player.name)
+            chatPlayerController.players[player] = chatPlayer
         }
     }
 

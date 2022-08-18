@@ -4,8 +4,8 @@ import br.com.thiago.tchat.configurations.CustomConfig
 import br.com.thiago.tchat.data.channels.ChannelType
 import br.com.thiago.tchat.data.channels.custom.entity.CustomChannel
 import org.bukkit.Bukkit
+import org.bukkit.OfflinePlayer
 import org.bukkit.configuration.file.FileConfiguration
-import org.bukkit.entity.Player
 
 class ChannelCustomDao {
 
@@ -15,9 +15,10 @@ class ChannelCustomDao {
             val section = config.getConfigurationSection(it)
             val activated = section.getBoolean("activated")
             val isPublic = section.getBoolean("isPublic")
-            val players = emptyList<Player>().toMutableList()
+            val players = emptyList<OfflinePlayer>().toMutableList()
+
             section.getStringList("players").forEach { player ->
-                players.add(Bukkit.getPlayerExact(player))
+                players.add(Bukkit.getOfflinePlayer(player))
             }
             customChannels.add(CustomChannel(it, ChannelType.CUSTOM, activated, isPublic, players))
         }

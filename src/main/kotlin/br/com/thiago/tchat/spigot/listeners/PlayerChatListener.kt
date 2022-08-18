@@ -50,7 +50,7 @@ class PlayerChatListener(
                 player,
                 event.message
             )
-            ChannelType.CUSTOM -> TODO()
+            ChannelType.CUSTOM -> return
         }
     }
 

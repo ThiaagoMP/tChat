@@ -39,7 +39,7 @@ class ChannelsInventory(private val chatPlayer: ChatPlayer, private val channelC
                 val configuration = chatPlayer.systemChannelsConfigurations[it]!!
                 val activated = configuration.activated
                 editor.setItem(counter, InventoryItem.of(
-                    ItemBuilder(Material.INK_SACK).setDisplayName("§7Click to §a${if (activated) "disabled" else "activated"} §7channel!")
+                    ItemBuilder(Material.INK_SACK).setDisplayName("§7Click to §a${if (activated) "disabled" else "activated"} §7channel §a${it.key}§7!")
                         .setColor(if (activated) DyeColor.LIME else DyeColor.GRAY)
                 ).defaultCallback { _ ->
                     configuration.activated = !activated

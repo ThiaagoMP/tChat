@@ -3,12 +3,10 @@ package br.com.thiago.tchat
 import br.com.thiago.tchat.spigot.commands.ToggleCommand
 import br.com.thiago.tchat.spigot.commands.admin.ChatConfigCommand
 import br.com.thiago.tchat.spigot.commands.admin.custom.channels.*
-import br.com.thiago.tchat.spigot.commands.chats.GlobalCommand
-import br.com.thiago.tchat.spigot.commands.chats.LocalCommand
-import br.com.thiago.tchat.spigot.commands.chats.ShoutCommand
-import br.com.thiago.tchat.spigot.commands.chats.WhisperCommand
+import br.com.thiago.tchat.spigot.commands.chats.*
 import br.com.thiago.tchat.spigot.listeners.PlayerChatListener
 import br.com.thiago.tchat.spigot.listeners.PlayerJoinListener
+import br.com.thiago.tchat.spigot.listeners.PlayerQuitListener
 import com.henryfabio.minecraft.inventoryapi.manager.InventoryManager
 import me.saiintbrisson.bukkit.command.BukkitFrame
 import org.bukkit.Bukkit
@@ -23,7 +21,10 @@ class SpigotLoader {
                     PlayerChatListener(tChat.chatPlayerController, tChat.channelController!!, tChat.config),
                     tChat
                 )
-            Bukkit.getPluginManager().registerEvents(PlayerJoinListener(tChat.chatPlayerController), tChat)
+            Bukkit.getPluginManager()
+                .registerEvents(PlayerJoinListener(tChat.chatPlayerController, tChat.playersDao!!), tChat)
+            Bukkit.getPluginManager()
+                .registerEvents(PlayerQuitListener(tChat.chatPlayerController, tChat.playersDao!!), tChat)
         }
 
         fun registerCommands(tChat: TChat) {

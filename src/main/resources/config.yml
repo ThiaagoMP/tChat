@@ -4,3 +4,9 @@ Local:
   DistanceInBlocks: 20
 Whisper:
   DistanceInBlocks: 3
+Database:
+  password: ''
+  user: 'root'
+  host: 'localhost'
+  port: '3306'
+  database: 'plugin'
